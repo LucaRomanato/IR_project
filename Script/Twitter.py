@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import tweepy as tw
+import json
 
 #Set twitter api kei and parameter varius
 def setAttr():
@@ -144,6 +145,36 @@ def merge_tweets (topic_channels):
     result_obj = pd.concat([pd.read_csv(file) for file in list_of_files])
     result_obj.to_csv("../Tweets-csv/tweets.csv", index=None, header=True, encoding='utf-8-sig')
 
+def getProfiles1 ():
+    df = pd.DataFrame(columns=['text'])
+    user = 'elonmusk'
+    f = open("../Profiles/" + user + ".txt", "a", encoding="utf-8")
+    try:
+        for tweet in tw.Cursor(api.user_timeline, screen_name=user, exclude_replies=True, count=10).items():
+            tweet_text = tweet.text
+            time = tweet.created_at
+            tweeter = tweet.user.screen_name
+            tweet_dict = {"tweet_text": tweet_text.strip()}
+            tweet_json = json.dumps(tweet_dict)
+            df = df.append({'text': tweet_text}, ignore_index=True)
+            print(df)
+        path = "../Profiles/" + user + ".csv"
+        df.to_csv(path, index=None, header=True)
+    except tw.TweepError:
+        time.sleep(60)
+
+def getProfiles ():
+    df = pd.DataFrame(columns=['text'])
+    user = 'elonmusk'
+    topic = "from:" + user
+    tweets = tw.Cursor(api.user_timeline, screen_name=user, exclude_replies=True, tweet_mode="extended", count=10).items()
+    attributes = [[tweet.full_text] for tweet in tweets]
+    df = pd.DataFrame(data=attributes, columns=['text'])
+    if not os.path.exists("../Profiles/" + user):
+        os.makedirs("../Profiles/" + user)
+    path = "../Profiles/" + user + ".csv"
+    df.to_csv(path, index=None, header=True)
+
 #Main code
 api, from_date ,topic_channels = setAttr()
 print("Set config end")
@@ -151,5 +182,7 @@ print("Set config end")
 #print("Collect tweets end")
 #collectTweets(api, from_date, topic_channels)
 
-merge_tweets(topic_channels)
+#merge_tweets(topic_channels)
 print("Merge tweets end")
+
+getProfiles()

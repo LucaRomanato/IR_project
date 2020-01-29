@@ -2,6 +2,7 @@ import requests, json, os, csv
 from datetime import datetime
 from elasticsearch import Elasticsearch, helpers
 import subprocess
+import elasticsearch as es
 
 #Start EL server
 def startELServer ():
@@ -70,11 +71,12 @@ def createIndexDocuments():
     except Exception as err:
         #startELServer();
         client, es = connectToELServer();
+
     csvToJson();
     indexing(client)
 
 createIndexDocuments()
 
 #query prova
-res= es.search(index='index',body={'query':{'match':{'text':'NASA'}}})
-print(res['hits']['hits'])
+res = es.search(index='index',body={'query':{'match':{'text':'NASA'}}})
+print(res['hits']['hits']);
