@@ -25,6 +25,12 @@ def common_sentences(text):
 	flat_list = [item for sublist in sentences for item in sublist]
 	print(Counter(flat_list).most_common(10))
 
+def top20_sentences(text):
+	sentences = (list(itertools.chain(text)))
+	flat_list = [item for sublist in sentences for item in sublist]
+	text_bow = Counter(flat_list).most_common(20)
+	return text_bow 
+
 def lowerCase(text):
 	text = text.str.lower()
 	return text
@@ -252,4 +258,7 @@ print('Most frequent tokens:')
 common_sentences(text)
 
 #output bow
-
+text_bow = top20_sentences(text)
+str = ' '.join(e[0] for e in text_bow)
+bow = str.split()
+print(bow)
