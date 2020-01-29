@@ -143,7 +143,9 @@ def merge_tweets (topic_channels):
         path = '../Tweets-csv/' + topic_channel['topic'] + '/' + topic_channel['account'] + '.csv'
         list_of_files.append(path)
     result_obj = pd.concat([pd.read_csv(file) for file in list_of_files])
-    result_obj.to_csv("../Tweets-csv/tweets.csv", index=None, header=True)
+    result_obj = result_obj[result_obj['topic']!= '']
+    print('Righe vuote: ', sum(result_obj['user']== ''))
+    result_obj.to_csv("../Tweets-csv/tweets.csv", index=None, header=True, encoding='utf-8-sig')
 
 #Main code
 api, from_date ,topic_channels = setAttr()

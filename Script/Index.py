@@ -3,6 +3,11 @@ import pandas as pd
 from time import sleep
 from datetime import datetime
 from elasticsearch import Elasticsearch, helpers
+from os import popen
+import subprocess
+
+
+subprocess.Popen('../elasticsearch/bin/elasticsearch')
 #By default, the Elasticsearch instance will listen on port 9200
 res = requests.get('http://localhost:9200')
 print (res.content)
