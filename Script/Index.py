@@ -119,3 +119,6 @@ print(res)
 
 #res= es.search(index='some_index',body={'query':{'match':{'Make':'Alfa'}}})
 #print(res['hits']['hits'])
+
+
+
