@@ -158,6 +158,18 @@ def remove_stopword(text):
     stop.add('“')
     stop.add('...')
     stop.add('u')
+    stop.add('rt')
+    stop.add("1")
+    stop.add("2")
+    stop.add("3")
+    stop.add("4")
+    stop.add("5")
+    stop.add("6")
+    stop.add("7")
+    stop.add("8")
+    stop.add("9")
+    stop.add("0")
+
     new_text = []
     for row in text:
         out = []
