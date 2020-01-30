@@ -77,6 +77,3 @@ def createIndexDocuments():
 
 createIndexDocuments()
 
-#query prova
-res = es.search(index='index',body={'query':{'match':{'text':'NASA'}}})
-print(res['hits']['hits']);
