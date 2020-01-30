@@ -226,55 +226,58 @@ def lemmatizer(text):
 
 # We will work on the text column
 
-text = df.text
 
-# Converting to lower case
-print('Converting to lower-case...')
-text = lowerCase(text)
 
-# Removing contractions from text
-print('Removing contractions..')
-text = decontract(text)
+def preProcess():
+    text = df.text
+    # Converting to lower case
+    print('Converting to lower-case...')
+    text = lowerCase(text)
 
-# Removing links
-print('Removing links from text...')
-text = remove_link(text)
+    # Removing contractions from text
+    print('Removing contractions..')
+    text = decontract(text)
 
-# Tokenizer
-print('Tokenizing sentences..')
-text = tokenize(text)
+    # Removing links
+    print('Removing links from text...')
+    text = remove_link(text)
 
-print('Most frequent tokens:')
-common_sentences(text)
+    # Tokenizer
+    print('Tokenizing sentences..')
+    text = tokenize(text)
 
-# Stopwords removal
-print('Removing stopwords..')
-text = remove_stopword(text)
+    print('Most frequent tokens:')
+    common_sentences(text)
 
-# Punctuation removal
-print('Removing punctuations..')
-text = remove_punct(text)
+    # Stopwords removal
+    print('Removing stopwords..')
+    text = remove_stopword(text)
 
-print('Most frequent tokens:')
-common_sentences(text)
+    # Punctuation removal
+    print('Removing punctuations..')
+    text = remove_punct(text)
 
-print('Removing emoji..')
-text = remove_emoji(text)
+    print('Most frequent tokens:')
+    common_sentences(text)
 
-print('Removing empty tokens..')
-text = remove_empty(text)
+    print('Removing emoji..')
+    text = remove_emoji(text)
 
-print('Most frequent tokens:')
-common_sentences(text)
+    print('Removing empty tokens..')
+    text = remove_empty(text)
 
-# Lemmatization!
-print('Applying Lemmatization..')
-text = lemmatizer(text)
+    print('Most frequent tokens:')
+    common_sentences(text)
 
-print('Most frequent tokens:')
-text_bow = common_sentences(text)
+    # Lemmatization!
+    print('Applying Lemmatization..')
+    text = lemmatizer(text)
 
-#output bow
-str = ' '.join(e[0] for e in text_bow)
-bow = str.split()
-print(bow)
+    print('Most frequent tokens:')
+    text_bow = common_sentences(text)
+
+    #output bow
+    str = ' '.join(e[0] for e in text_bow)
+    bow = str.split()
+    print(bow)
+    return (bow)

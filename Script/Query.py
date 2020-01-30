@@ -1,5 +1,6 @@
 import requests
 from elasticsearch import Elasticsearch
+from Script.userPreprocess import preProcess
 import elasticsearch as es
 
 def connectToELServer ():
@@ -12,11 +13,17 @@ def connectToELServer ():
 
 client, es = connectToELServer();
 
+
+#####################
+bow = preProcess()
+print(bow)
+####################
+
 #query prova base
 res = es.search(index='index',body={'query':{'match':{'text':'#SolarOrbiter'}}})
 print("%d documents found" % res['hits']['total']['value'])
 for doc in res['hits']['hits']:
     print("id: %s, score: %s ) %s" % (doc['_id'], doc['_score'], doc['_source']['text']))
     print("\n")
-    
+
 #query prova con BoW
