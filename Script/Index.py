@@ -1,9 +1,10 @@
-import requests, json, os, csv
+import requests, json, os, csv, time
 from datetime import datetime
 from elasticsearch import Elasticsearch, helpers
 import subprocess
 import elasticsearch as es
-
+import pandas as pd
+from dateutil import parser
 #Start EL server
 def startELServer ():
     command = os.path.abspath('../elasticsearch/bin/elasticsearch')
@@ -20,23 +21,31 @@ def connectToELServer ():
     return client, es
 
 #Create json file from csv
-def csvToJson ():
-    print("conversione csv to json")
-    csvfile = open('../Tweets-csv/tweets.csv', 'r', encoding="utf8")
-    jsonfile = open('../Tweets-csv/tweets.json', 'w')
-    fieldnames = ('user', 'text', 'location', 'date')
-    reader = csv.DictReader(csvfile, fieldnames)
-    for row in reader:
-        json.dump(row, jsonfile)
-        jsonfile.write('\n')
+#def csvToJson ():
+#    print("conversione csv to json")
+#    csvfile = open('../Tweets-csv/tweets.csv', 'r', encoding="utf8")
+#    jsonfile = open('../Tweets-csv/tweets.json', 'w')
+#    fieldnames = ('user', 'text', 'location', 'date', 'topic')
+#    reader = csv.DictReader(csvfile, fieldnames)
+#    for row in reader:
+#        json.dump(row, jsonfile)
+#        jsonfile.write('\n')
     
+#    print("fine conversione csv to json")
+def csvToJson ():
+    df = pd.read_csv("../Tweets-csv/tutto-csv.csv")
+    df.reset_index(drop=True, inplace=True)
+    
+    df.to_json(r'../Tweets-csv/tutto-json.json',orient='records', lines=True)
     print("fine conversione csv to json")
-
+    
 def get_data_from_text_file(self):
     return [l.strip() for l in open(str(self), encoding="utf8", errors='ignore')]
 
 def indexing (client):
-    docs = get_data_from_text_file("../Tweets-csv/tweets.json")
+    df = pd.read_csv("../Tweets-csv/tutto-csv.csv") ###
+     
+    docs = get_data_from_text_file("../Tweets-csv/tutto-json.json")
     print ("String docs length:", len(docs))
     doc_list = []
     for num, doc in enumerate(docs):
@@ -45,6 +54,7 @@ def indexing (client):
             doc = doc.replace("False", "false")
             dict_doc = json.loads(doc)
             dict_doc["timestamp"] = datetime.now()
+            dict_doc["date_calendar"] = parser.parse(df["date"][num]) 
             dict_doc["_id"] = num
             doc_list += [dict_doc]
         except json.decoder.JSONDecodeError as err:
