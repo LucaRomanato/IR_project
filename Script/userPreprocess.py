@@ -157,7 +157,34 @@ def remove_stopword(text):
     stop.add("8")
     stop.add("9")
     stop.add("0")
-
+    stop.add("10")
+    stop.add("11")
+    stop.add("like")
+    stop.add("one")
+    stop.add("great")
+    stop.add("let")
+    stop.add("get")
+    stop.add("see")
+    stop.add("thank")
+    stop.add("thanks")
+    stop.add("new")
+    stop.add("go")
+    stop.add(":-)")
+    stop.add("first")
+    stop.add("great")
+    stop.add("would")
+    stop.add("de")
+    stop.add("la")
+    stop.add("say")
+    stop.add("good")
+    stop.add("via")
+    stop.add("want")
+    stop.add("last")
+    stop.add("here")
+    stop.add("huge")
+    stop.add("week")
+    stop.add("w")
+    
     new_text = []
     for row in text:
         out = []
@@ -271,7 +298,7 @@ def preProcess():
 
 
 def getUserBow(users_bow, u):
-    return(users_bow[users_bow['user'] == 'elonmusk']['bow'].tolist())
+    return(users_bow[users_bow['user'] == u]['bow'].tolist())
 
 def getUsersNotCurrent(users_bow, u):
     return(users_bow[users_bow['user']!= u]['user'].unique().tolist())
