@@ -1,89 +1,71 @@
-import requests, json, os, csv, time
-from datetime import datetime
+import requests, os, csv
 from elasticsearch import Elasticsearch, helpers
 import subprocess
-import elasticsearch as es
-import pandas as pd
-from dateutil import parser
-#Start EL server
-def startELServer ():
+import time
+
+
+# Start EL server
+def startELServer():
     command = os.path.abspath('../elasticsearch/bin/elasticsearch')
     popen = subprocess.Popen('cmd /c' + command)
     popen.wait()
 
-#Connection to elasticsearch server and start client istance
-def connectToELServer ():
+
+# Connection to elasticsearch server and start client istance
+def connectToELServer():
     res = requests.get('http://localhost:9200')
     es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
     client = Elasticsearch("localhost:9200")
-    #cancellare index
-    #es.indices.delete(index='index', ignore=[400, 404])
+    # cancellare index
+    # es.indices.delete(index='index', ignore=[400, 404])
     return client, es
 
-#Create json file from csv
-#def csvToJson ():
-#    print("conversione csv to json")
-#    csvfile = open('../Tweets-csv/tweets.csv', 'r', encoding="utf8")
-#    jsonfile = open('../Tweets-csv/tweets.json', 'w')
-#    fieldnames = ('user', 'text', 'location', 'date', 'topic')
-#    reader = csv.DictReader(csvfile, fieldnames)
-#    for row in reader:
-#        json.dump(row, jsonfile)
-#        jsonfile.write('\n')
-    
-#    print("fine conversione csv to json")
-def csvToJson ():
-    df = pd.read_csv("../Tweets-csv/tutto-csv.csv")
-    df.reset_index(drop=True, inplace=True)
-    
-    df.to_json(r'../Tweets-csv/tutto-json.json',orient='records', lines=True)
-    print("fine conversione csv to json")
-    
-def get_data_from_text_file(self):
-    return [l.strip() for l in open(str(self), encoding="utf8", errors='ignore')]
 
-def indexing (client):
-    df = pd.read_csv("../Tweets-csv/tutto-csv.csv") ###
-     
-    docs = get_data_from_text_file("../Tweets-csv/tutto-json.json")
-    print ("String docs length:", len(docs))
-    doc_list = []
-    for num, doc in enumerate(docs):
-        try:
-            doc = doc.replace("True", "true")
-            doc = doc.replace("False", "false")
-            dict_doc = json.loads(doc)
-            dict_doc["timestamp"] = datetime.now()
-            dict_doc["date_calendar"] = parser.parse(df["date"][num]) 
-            dict_doc["_id"] = num
-            doc_list += [dict_doc]
-        except json.decoder.JSONDecodeError as err:
-            print ("ERROR for num:", num, "-- JSONDecodeError:", err, "for doc:", doc)
-            print ("Dict docs length:", len(doc_list))
-        try:
-            print ("\nAttempting to index the list of docs using helpers.bulk()")
-            resp = helpers.bulk(
-                client,
-                doc_list,
-                index = "index",
-                doc_type = "_doc"
-                )
-            print ("helpers.bulk() RESPONSE:", resp)
-            print ("helpers.bulk() RESPONSE:", json.dumps(resp, indent=4))
-    
-        except Exception as err:
-            print("Elasticsearch helpers.bulk() ERROR:", err)
-            quit()
+def indexing(client):
+    body = {
+        "settings": {
+            "index": {"number_of_shards": 6,
+                      "number_of_replicas": 1
+                      }
+        },
+        "mappings": {
+            "properties": {
+                "date": {
+                    "type": "date",
+                    "format": "yyyy-MM-dd HH:mm:ss"
+                },
+                "location": {"type": "text"},
+                "text": {"type": "text"},
+                "topic": {"type": "text"},
+                "user": {"type": "text"}
+            }
+        }
+    }
+    client.indices.create(
+        index="twitter5", body=body
+    )
+
+    with open("../Tweets-csv/tutto-csv.csv", "r", encoding="utf-8") as fileToLoad:
+        reader = csv.DictReader(fileToLoad)
+
+        resp = helpers.bulk(
+            client,
+            reader,
+            index="twitter5",
+            doc_type="_doc",
+
+        )
+        print("Mappato")
+
 
 def createIndexDocuments():
     try:
         client, es = connectToELServer();
     except Exception as err:
-        #startELServer();
+        startELServer();
         client, es = connectToELServer();
 
-    csvToJson();
     indexing(client)
 
-createIndexDocuments()
 
+createIndexDocuments()

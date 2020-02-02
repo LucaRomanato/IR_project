@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block css %}
+<link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<div class="main-body">
+    <div class="d-flex flex-wrap justify-content-center align-items-center w-100 h-100 back"
+      style="position: fixed; top:0; right: 0; left: 0; bottom: 0; padding-top: 5%; padding-bottom: 5%; padding-left: 15%; padding-right: 15%">
+
+        <div class="justify-content-center align-items-center d-flex flex-wrap d-flex w-100 h-100 box1">
+            <div class="left d-flex flex-wrap h-100 justify-content-start align-items-end">
+                <div class="d-flex flex-wrap align-items-end">
+                    <h2 class="d-flex pl-2 w-100" style="color: #ffffff; font-size: 45px">Welcome back</h2>
+                    <p class="d-flex pl-2 w-100" style="color: #ffffff; margin-bottom: 20%; font-size: 34px">who are you?</p>
+                </div>
+
+            </div>
+            <div class="right align-items-center justify-content-end d-flex flex-wrap h-100">
+                <div class="d-flex flex-wrap w-100 align-items-start" style="padding: 16%">
+                    <h2 class="d-flex w-100 mb-4" style="color: #565656 ; font-size: 32px">Sign Up</h2>
+                    <select class="placeholder w-100 selezione" name="user" id="user">
+                      <option value="elonmusk">Elon Musk</option>
+                      <option value="pippofranco">Pippo Franco</option>
+                    </select>
+                    <input class="selezione w-100 mt-4" type="password" name="pwd" value="lapassword" disabled>
+                    <a class="search w-100 mt-4 href-reset d-flex justify-content-center align-items-center" href="#" onclick="switchUser(); return false">CONTINUE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function switchUser() {
+        var u = $('#user').val()
+        if(u){
+          $.get('/'+u+'/bow').then(function(data){
+              console.log(data);
+              window.location = '/'+u;
+          });
+
+        }
+    }
+</script>
+{% endblock %}

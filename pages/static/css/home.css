@@ -1,0 +1,72 @@
+.username{
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.user-avatar{
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    border: 1px solid #ffffff;
+}
+
+.header{
+    #background-color: #282828;
+    background-color: transparent;
+    height: 60px;
+    -webkit-transition: all ease-out .5s;
+  -moz-transition: all ease-out .5s;
+  -o-transition: all ease-out .5s;
+  transition: all ease-out .5s;
+}
+
+.header-container{
+    position: sticky;
+    top: -250px;
+}
+
+.active{
+    background-color: rgba(0,0,0,0.6) !important;
+}
+
+.search-container{
+    height: 390px;
+    background-color: transparent;
+    position: sticky;
+    top: -190px;
+    padding-bottom: 4px;
+}
+
+.second-wrap{
+    width: 620px;
+}
+
+.third-wrap{
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.cerca{
+    height: 49px !important;
+}
+
+.logo{
+    height: 40px;
+}
+
+.bow{
+    border-radius: 10px;
+    border: 1px solid #ffffff;
+    background: radial-gradient(ellipse at bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 100%);
+    color: #ffffff;
+}
+
+.bows-container{
+    max-width: 790px;
+    overflow-x: scroll;
+    -ms-overflow-style: none;
+ }
+
+.bows-container::-webkit-scrollbar {
+  display: none;
+}

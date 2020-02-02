@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="{{ url_for('static', filename='js/pace.min.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/select2.min.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/pace.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/utils.css') }}" rel="stylesheet"/>
+
+    {% block css %}{% endblock %}
+    <title>{{ title }} - MRsearch</title>
+</head>
+<body>
+{% block content %}{% endblock %}
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+{% block script %}{% endblock %}
+</body>
+</html>

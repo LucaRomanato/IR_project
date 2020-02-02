@@ -1,32 +1,19 @@
-import os.path as path
-import pandas as pd
-import numpy as np
-import re
 import itertools
+import re
 import string
-import csv
-import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
+from collections import Counter
+import pandas as pd
 from nltk.corpus import stopwords
-# from nltk.tokenize import word_tokenize
-from nltk.tokenize import TweetTokenizer
-from nltk import wordpunct_tokenize
-from nltk.stem.lancaster import LancasterStemmer
 from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import TweetTokenizer
 
-nltk.download('wordnet')
-
-from collections import Counter, OrderedDict
-
-from sklearn.manifold import TSNE
-import matplotlib.pyplot as plt
+# nltk.download('wordnet')
+# nltk.download('punkt')
+# nltk.download('stopwords')
 
 PATH = '../Profiles/elonmusk.csv'
 
 df = pd.read_csv(PATH)
-
-
 
 
 def common_sentences(text):
@@ -35,6 +22,7 @@ def common_sentences(text):
     print(Counter(flat_list).most_common(10))
     text_bow = Counter(flat_list).most_common(20)
     return text_bow
+
 
 def lowerCase(text):
     text = text.str.lower()
@@ -227,19 +215,6 @@ def lemmatizer(text):
     return new_text
 
 
-
-
-'''
------------ START ------------
-'''
-
-# Removing hashtags and citations
-# df['text'] = df['text'].apply(p.clean)
-
-# We will work on the text column
-
-
-
 def preProcess():
     text = df.text
     # Converting to lower case
@@ -288,8 +263,8 @@ def preProcess():
     print('Most frequent tokens:')
     text_bow = common_sentences(text)
 
-    #output bow
+    # output bow
     str = ' '.join(e[0] for e in text_bow)
     bow = str.split()
     print(bow)
-    return (bow)
+    return bow
