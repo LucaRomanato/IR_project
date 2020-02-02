@@ -4,7 +4,6 @@ import requests
 from flask import Flask, render_template, request, send_from_directory, jsonify, send_file, url_for
 import Script.userPreprocess as pp
 from Script.Query import search as se
-import webbrowser
 from unsplash.api import Api
 from unsplash.auth import Auth
 
