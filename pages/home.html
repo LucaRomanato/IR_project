@@ -3,10 +3,11 @@
 <link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet"/>
 {% endblock %}
 {% block content %}
-<div class="header-container" style="background: linear-gradient(rgba(20, 20, 20, .5),rgba(20, 20, 20, .5)), url('/fimages/science') no-repeat center center/cover">
+<div class="header-container"
+     style="background: linear-gradient(rgba(20, 20, 20, .5),rgba(20, 20, 20, .5)), url('/fimages/science') no-repeat center center/cover">
     <header class="header sticky-top">
         <div class="d-flex mx-4 justify-content-end align-items-center h-100">
-            <img src="static/img/logo.png" class="d-flex logo mr-auto">
+            <img src="static/img/logo.png" class="d-flex logo ml-2 mr-auto">
             <div class="d-flex align-items-center justify-content-end h-100">
                 <div class="user-avatar d-flex"
                      style=" background: url('https://avatars.io/twitter/{{user}}') no-repeat center / cover;"></div>
@@ -17,6 +18,10 @@
         </div>
     </header>
     <div class="search-container w-100 d-flex flex-wrap justify-content-center align-items-end">
+        <div class="w-100 d-flex flex-wrap justify-content-center align-items-center">
+            <h2 class="w-100 text-center m-0" style="color: #ffffff; font-size: 90px; font-weight: bold">Tweetify</h2>
+            <p class="mb-1" style="color: #ffffff; font-size: 30px">tweet's finder</p>
+        </div>
         <div class="w-100">
             <div class="s003 d-flex flex-wrap">
                 <div class="d-flex w-100 justify-content-center">
@@ -24,8 +29,8 @@
                         <div class="inner-form h-100">
                             <div class="input-field first-wrap d-flex align-items-center">
                                 <div class="input-select w-100">
-                                    <select id="topicList" data-trigger="" name="choices-single-defaul">
-                                        <option placeholder="">Topic</option>
+                                    <select id="topicList" data-trigger="" name="choices-single-defaul" required>
+                                        <option placeholder="">All</option>
                                         <option>Photography</option>
                                         <option>Science</option>
                                         <option>Music</option>
@@ -38,10 +43,11 @@
                                 </div>
                             </div>
                             <div class="input-field second-wrap">
-                                <input class="w-100" id="search" type="text" placeholder="Enter Keywords?"/>
+                                <input class="w-100" id="search" type="text" placeholder="Search with tweetify"
+                                       required/>
                             </div>
                             <div class="input-field third-wrap h-100">
-                                <button class="btn-search" type="button">
+                                <button class="btn-search" type="submit">
                                     <svg class="svg-inline--fa fa-search fa-w-16" aria-hidden="true" data-prefix="fas"
                                          data-icon="search" role="img" xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 512 512">
@@ -54,7 +60,7 @@
                     </form>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <div id="bows" class="bows-container d-flex mt-2 justify-content-start">
+                    <div id="bows" class="bows-container d-flex mt-2 justify-content-center">
                         {% for bow1 in bow %}
                         <div class='bow d-flex px-3 py-2 mr-2 mt-1'>{{bow1}}</div>
                         {% endfor %}
@@ -65,90 +71,41 @@
     </div>
 </div>
 
-<div class="results-container">
-    <div class="result-container">
+<!-- Search result -->
+<div class="container-fluid htlfndr-visitors-cards w-100 d-flex flex-wrap justify-content-center">
+    <h2 class="text-center mb-3 w-100" style="font-weight: bold;color: #515456;">Search result</h2>
+    <div id="tweets-container" class="row m-0 justify-content-start" style="padding-left: 10%; padding-right: 10%">
 
     </div>
+    <div id="pagination-container" class="w-100 d-none justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#" onclick="prev(); return false">Previous</a></li>
+                <div class="mx-2 mb-0 align-self-center"><span id="currentPage"></span> of <span id="totalPage"></span>
+                </div>
+                <li class="page-item"><a class="page-link" href="#" onclick="next(); return false">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
 </div>
-<div>
-    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
-    natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,
-    pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec,
-    vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-    mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.
-    Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis,
-    feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam
-    ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus
-    eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit
-    vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero
-    venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla
-    mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus
-    nunc,
-    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
-    natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,
-    pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec,
-    vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-    mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.
-    Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis,
-    feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam
-    ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus
-    eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit
-    vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero
-    venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla
-    mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus
-    nunc,
-    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
-    natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,
-    pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec,
-    vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-    mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.
-    Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis,
-    feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam
-    ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus
-    eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit
-    vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero
-    venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla
-    mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus
-    nunc,
-     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
-    natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,
-    pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec,
-    vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-    mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.
-    Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis,
-    feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam
-    ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus
-    eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit
-    vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero
-    venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla
-    mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus
-    nunc,
-     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
-    natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,
-    pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec,
-    vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-    mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.
-    Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis,
-    feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam
-    ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus
-    eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit
-    vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero
-    venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla
-    mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus
-    nunc,
-     Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis
-    natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,
-    pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec,
-    vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-    mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.
-    Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis,
-    feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam
-    ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus
-    eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit
-    vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero
-    venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla
-    mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus
-    nunc,
+
+<!-- Other users -->
+<div class="container-fluid htlfndr-categories-portfolio">
+    <h2 class="text-center mb-3" style="font-weight: bold;color: #515456;">Other users</h2>
+    <div class="row m-0 justify-content-center" style="padding-left: 8%; padding-right: 8%">
+         {% for user1 in users %}
+            <div style="padding: 3%" class="col-4">
+            <div class="htlfndr-category-box" onclick="void(0)">
+                <img src="https://avatars.io/twitter/{{user1}}" style="width: 350px; height: 320px"/>
+                <div class="category-description">
+                    <h2 class="subcategory-name">@{{user1}}</h2>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
 </div>
 {% endblock %}
 
@@ -158,20 +115,124 @@
 <script src="{{ url_for('static', filename='js/choices.js') }}"></script>
 
 <script>
+    var current_page = 1;
+    var max_page = 1000;
+    var tweet_empty = '<div class="d-flex w-100 flex-wrap justify-content-center align-items-center mt-3">' +
+        '            <img src="static/img/sad.svg" class="d-flex mb-4" style="width: 230px;">' +
+        '            <h2 class="w-100 text-center m-0" style="font-size: 45px; font-weight: bold">No Result Found</h2>' +
+        '            <p class="w-100 text-center m-0" style="font-size: 18px; color: #A2A2A2">We\'ve searched more than 75000 tweets<br>We' +
+        '                did not find any tweets for your search</p>' +
+        '        </div>';
+
+
+    var tweet_element = '<div class="col-6 htlfndr-visitor-column">' +
+        '            <div class="htlfndr-visitor-card">' +
+        '                <div class="visitor-avatar-side">' +
+        '                    <div class="visitor-avatar">' +
+        '                        <img src="https://avatars.io/twitter/##target##" height="90" width="90" alt="user avatar"/>' +
+        '                    </div>' +
+        '                </div>' +
+        '                <div class="visitor-info-side">' +
+        '                    <h5 class="visitor-user-name">##author##</h5>' +
+        '                    <h6 class="visitor-user-firm">##topic##</h6>' +
+        '                    <h6 class="visitor-user-firm">##data##</h6>' +
+        '                    <p class="visitor-user-text" data-toggle="tooltip" data-html="true" title="##tooltip##">##text##</p>' +
+        '                </div>' +
+        '            </div>' +
+        '        </div>';
+
+    var tweet_search = '<div class="d-flex w-100 flex-wrap justify-content-center align-items-center mt-3">' +
+        '             <img src="static/img/search.svg" class="d-flex mb-4" style="width: 230px;">' +
+        '             <h2 class="w-100 text-center m-0" style="font-size: 45px; font-weight: bold">Search Something</h2>' +
+        '             <p class="w-100 text-center m-0" style="font-size: 18px; color: #A2A2A2">Hurry up! <br>you can search more' +
+        '                than 75000 tweets</p>' +
+        '        </div>';
+
+    var tc = $('#tweets-container');
+    tc.append(tweet_search);
+
+    function next() {
+        if (max_page > current_page) {
+            current_page += 1;
+            callSearch()
+            $("html, body").animate({scrollTop: 0}, 500, 'swing');
+        }
+    }
+
+    function prev() {
+        if (1 < current_page) {
+            current_page -= 1;
+            callSearch()
+            $("html, body").animate({scrollTop: 0}, 500, 'swing');
+        }
+    }
+
+    $('form').submit(function (ev) {
+        ev.preventDefault();
+        current_page = 1;
+        callSearch()
+        $("html, body").animate({scrollTop: 0}, 500, 'swing');
+    });
+
+    function callSearch() {
+        let postObj = {
+            q: $('#search').val(),
+            t: topic,
+            pn: current_page
+        };
+        console.log(postObj)
+        $.ajax({
+            url: '/search',
+            type: 'POST',
+            data: JSON.stringify(postObj),
+            contentType: 'application/json',
+            processData: false,
+            success: (function (data) {
+                console.log(data);
+                tc.html('');
+                if (data && data[2] && data[2].length > 0) {
+                    max_page = data[0];
+                    $('#currentPage').html(current_page);
+                    $('#totalPage').html(max_page);
+                    $('#pagination-container').removeClass('d-none');
+                    $('#pagination-container').addClass('d-flex');
+                    for (let i = 0; i < data[2].length; i++) {
+                        let el = data[2][i]
+                        console.log(el)
+                        let temp = tweet_element.replace("##author##", el['_source']['user'])
+                            .replace("##topic##", el['_source']['topic'])
+                            .replace("##text##", el['_source']['text'])
+                            .replace("##data##", el['_source']['date'])
+                            .replace("##target##", el['_source']['user'])
+                            .replace("##tooltip##", el['_source']['text']);
+                        tc.append(temp)
+                    }
+                } else {
+                    $('#pagination-container').removeClass('d-flex');
+                    $('#pagination-container').addClass('d-none');
+                    tc.append(tweet_empty)
+                }
+            })
+        });
+
+    }
+
     const choices = new Choices('[data-trigger]',
         {
             searchEnabled: false,
             itemSelectText: '',
         });
     const element = document.getElementById('topicList');
+    var topic = $('#topicList').val();
 
     element.addEventListener(
         'choice',
         function (event) {
             // do something creative here...
-            console.log(event.detail.choice.value)
+            topic = event.detail.choice.value;
+            console.log(topic)
 
-            $('.search-container').css('background', 'linear-gradient(rgba(20, 20, 20, .5),rgba(20, 20, 20, .5)), url(\'/fimages/' + event.detail.choice.value + '\') no-repeat center center/cover')
+            $('.header-container').css('background', 'linear-gradient(rgba(20, 20, 20, .5),rgba(20, 20, 20, .5)), url(\'/fimages/' + topic + '\') no-repeat center center/cover')
         },
         false,
     );

@@ -12,7 +12,10 @@ def connectToELServer():
 client, es = connectToELServer();
 
 # Il target è la pagina da cui ho preso il tweet
-def search(query, topic, target, tweet_date, start_from, page_size, bow, country='US'):
+def search(query, topic, target, tweet_date, page_number, page_size, bow, country='US'):
+
+    start_from = (page_number * page_size) - page_size
+
     must = []
     should = []
 
@@ -38,7 +41,7 @@ def search(query, topic, target, tweet_date, start_from, page_size, bow, country
     else:
         must.append({"query_string": {"query": query, "default_field": "text"}})
 
-        if topic != "":
+        if topic != "All":
             must.append({"term": {"topic": topic}})
 
         if target != "":
@@ -57,23 +60,17 @@ def search(query, topic, target, tweet_date, start_from, page_size, bow, country
                             "should": should,
                             "must": must,
                         }
-                    },
-                    "gauss": {
-                        "date": {
-                            "origin": "2020-01-29 00:00:00",
-                            "scale": "10d"
-                        }
                     }
                 }
             }
 
         }
-
-    res = es.search(index='twitter5', body=query_body)
+    print(query_body)
+    res = es.search(index='twitter6', body=query_body)
     print(res)
-    total_page = math.ceil(res['hits']['total']['value']/10)
+    total_page = math.ceil(res['hits']['total']['value']/page_size)
 
-    return total_page, res['hits']['hits']
+    return total_page, page_number, res['hits']['hits']
 
-nbow = preProcess()
-print(search('"the Sun from"', "", "", "", 0, 10, nbow))
+#nbow = preProcess()
+#print(search('"the Sun from"', "", "", "", 0, 10, nbow))

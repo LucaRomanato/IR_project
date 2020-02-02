@@ -268,3 +268,17 @@ def preProcess():
     bow = str.split()
     print(bow)
     return bow
+
+
+def getUserBow(users_bow, u):
+    return(users_bow[users_bow['user'] == 'elonmusk']['bow'].tolist())
+
+def getUsersNotCurrent(users_bow, u):
+    return(users_bow[users_bow['user']!= u]['user'].unique().tolist())
+
+def getUsers(users_bow):
+    return(users_bow['user'].unique().tolist())
+
+def getUsersBows():
+    bow = pd.read_csv('../Tweets-csv/BowTotali.csv')
+    return(bow)

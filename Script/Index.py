@@ -34,15 +34,15 @@ def indexing(client):
                     "type": "date",
                     "format": "yyyy-MM-dd HH:mm:ss"
                 },
-                "location": {"type": "text"},
+                "location": {"type": "keyword"},
                 "text": {"type": "text"},
-                "topic": {"type": "text"},
-                "user": {"type": "text"}
+                "topic": {"type": "keyword"},
+                "user": {"type": "keyword"}
             }
         }
     }
     client.indices.create(
-        index="twitter5", body=body
+        index="twitter6", body=body
     )
 
     with open("../Tweets-csv/tutto-csv.csv", "r", encoding="utf-8") as fileToLoad:
@@ -51,7 +51,7 @@ def indexing(client):
         resp = helpers.bulk(
             client,
             reader,
-            index="twitter5",
+            index="twitter6",
             doc_type="_doc",
 
         )

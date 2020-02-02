@@ -2,7 +2,8 @@ from io import BytesIO
 
 import requests
 from flask import Flask, render_template, request, send_from_directory, jsonify, send_file, url_for
-from Script.userPreprocess import preProcess
+import Script.userPreprocess as pp
+from Script.Query import search as se
 import webbrowser
 from unsplash.api import Api
 from unsplash.auth import Auth
@@ -17,7 +18,8 @@ unsplash_api = Api(auth)
 
 app = Flask(__name__, template_folder='../pages', static_folder='../pages/static')
 bow = []
-
+user = []
+users_bow = []
 
 def getImageUrl(topic):
     try:
@@ -48,21 +50,40 @@ def favicon():
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
-    return render_template('login.html', title='Login')
+    global users_bow
+    users_bow = pp.getUsersBows()
+    all_users = pp.getUsers(users_bow)
+    return render_template('login.html', title='Login', users=all_users)
 
 
 @app.route("/<user>/bow", methods=['GET', 'POST'])
 def bow(user):
     global bow
-    bow = preProcess()
+    global users
+    global users_bow
+    users = pp.getUsersNotCurrent(users_bow, user)
+    bow = pp.getUserBow(users_bow, user)
+    print("Prima di ritornare: ", jsonify(bow))
     return jsonify(bow)
+
+
+@app.route("/search", methods=['POST'])
+def search():
+    global bow
+    data = request.get_json(force=True)
+    query = data['q']
+    topic = data['t']
+    page_number = data['pn']
+    res = se(query, topic, "", "", page_number, 10, bow, "")
+    return jsonify(res)
 
 
 @app.route("/<user>", methods=['GET', 'POST'])
 def home(user):
     global bow
+    global users
     #####################
-    print(bow)
+    print("le bow nella home", bow)
     ####################
     query = request.args.get('q', '', str)
     topic = request.args.get('t', '', str)
@@ -73,9 +94,9 @@ def home(user):
     # Chiamata
 
     return render_template('home.html', user=user, bow=bow, title=user + '\'s Home',
-                           background_image=getImageUrl('science'))
+                           background_image=getImageUrl('science'), users=users)
 
 
 if __name__ == "__main__":
-    #webbrowser.open('http://localhost:5000')
+    # webbrowser.open('http://localhost:5000')
     app.run()
