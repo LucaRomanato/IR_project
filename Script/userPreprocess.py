@@ -11,23 +11,12 @@ from nltk.tokenize import TweetTokenizer
 # nltk.download('punkt')
 # nltk.download('stopwords')
 
-PATH = '../Profiles/elonmusk.csv'
-
-df = pd.read_csv(PATH)
-
-
-def common_sentences(text):
+def create_bow(text):
     sentences = (list(itertools.chain(text)))
     flat_list = [item for sublist in sentences for item in sublist]
-    print(Counter(flat_list).most_common(10))
+    print(Counter(flat_list).most_common(20))
     text_bow = Counter(flat_list).most_common(20)
     return text_bow
-
-
-def lowerCase(text):
-    text = text.str.lower()
-    return text
-
 
 def decontract(text):
     contractions = {
@@ -105,8 +94,7 @@ def decontract(text):
         "you'll": "you will",
         "you're": "you are"
     }
-
-    # text = df[attr]
+    
     clean_text = []
     for row in text:
         row = row.split()
@@ -122,24 +110,22 @@ def decontract(text):
     return text
 
 
-def remove_link(text):
-    new_text = []
+def link_removal(text):
+    nl_text = []
     for row in text:
-        new_text.append(re.sub(r"http\S+", "", row))
-    return new_text
+        nl_text.append(re.sub(r"http\S+", "", row))
+    return nl_text
 
 
-def tokenize(text):
+def tokenize_text(text):
     tkn = TweetTokenizer()
-    new_text = []
+    tkn_text = []
     for row in text:
-        # tkn.tokenize(row)
-        new_text.append(tkn.tokenize(row))
-    # text = text.apply(lambda row: tkn.tokenize(row['text']), axis=1)
-    return new_text
+        tkn_text.append(tkn.tokenize(row))
+    return tkn_text
 
 
-def remove_stopword(text):
+def stopword_removal(text):
     stop = stopwords.words('english')
     stop = set(stop)
     stop.add('’')
@@ -185,110 +171,93 @@ def remove_stopword(text):
     stop.add("week")
     stop.add("w")
     
-    new_text = []
+    sr_text = []
     for row in text:
-        out = []
+        out_text = []
         for token in row:
             if token not in stop:
-                out.append(token)
-        new_text.append(out)
-    # text = text.apply(lambda x: [item for item in x if item not in stop])
-    return new_text
+                out_text.append(token)
+        sr_text.append(out_text)
+    return sr_text
 
 
-def remove_punct(text):
+def punctuation_removal(text):
     punctuation = string.punctuation
-    new_text = []
+    pr_text = []
     for row in text:
-        out = []
+        out_text = []
         for token in row:
             token = token.replace("'s", "")
             if token not in punctuation:
-                out.append(token)
-        new_text.append(out)
-    # text = text.apply(lambda x: [item for item in x if item not in punctuation])
-    return new_text
+                out_text.append(token)
+        pr_text.append(out_text)
+    return pr_text
 
 
-def remove_emoji(text):
-    new_text = []
+def emoji_removal(text):
+    er_text = []
     for row in text:
-        out = []
+        out_text = []
         for token in row:
-            out.append(token.encode('ascii', 'ignore').decode('ascii'))
-        new_text.append(out)
-    return new_text
+            out_text.append(token.encode('ascii', 'ignore').decode('ascii'))
+        er_text.append(out_text)
+    return er_text
 
 
-def remove_empty(text):
-    new_text = []
+def empty_removal(text):
+    er_text = []
     for row in text:
-        out = []
+        out_text = []
         for token in row:
             if token != '':
-                out.append(token)
-        new_text.append(out)
-    return new_text
+                out_text.append(token)
+        er_text.append(out_text)
+    return er_text
 
 
-def lemmatizer(text):
-    new_text = []
+def lemmatizer_text(text):
+    lemm_text = []
     lemmatizer = WordNetLemmatizer()
     for row in text:
-        out = []
+        out_text = []
         for token in row:
-            out.append(lemmatizer.lemmatize(token))
-        new_text.append(out)
-    return new_text
+            out_text.append(lemmatizer.lemmatize(token))
+        lemm_text.append(out_text)
+    return lemm_text
 
 
-def preProcess():
+def preProcess(df):
     text = df.text
-    # Converting to lower case
-    print('Converting to lower-case...')
-    text = lowerCase(text)
 
-    # Removing contractions from text
-    print('Removing contractions..')
+    print('lower-case phase')
+    text = text.str.lower()
+
+    print('contractions phase')
     text = decontract(text)
 
-    # Removing links
     print('Removing links from text...')
-    text = remove_link(text)
+    text = link_removal(text)
 
-    # Tokenizer
-    print('Tokenizing sentences..')
-    text = tokenize(text)
+    print('Tokenizing phase')
+    text = tokenize_text(text)
 
-    print('Most frequent tokens:')
-    common_sentences(text)
+    print('stopwords phase')
+    text = stopword_removal(text)
 
-    # Stopwords removal
-    print('Removing stopwords..')
-    text = remove_stopword(text)
+    print('punctuations phase')
+    text = punctuation_removal(text)
 
-    # Punctuation removal
-    print('Removing punctuations..')
-    text = remove_punct(text)
+    print('emoji phase')
+    text = emoji_removal(text)
 
-    print('Most frequent tokens:')
-    common_sentences(text)
+    print('Removing empty tokens created in preprocess')
+    text = empty_removal(text)
 
-    print('Removing emoji..')
-    text = remove_emoji(text)
+    print('Lemmatization phase')
+    text = lemmatizer_text(text)
 
-    print('Removing empty tokens..')
-    text = remove_empty(text)
-
-    print('Most frequent tokens:')
-    common_sentences(text)
-
-    # Lemmatization!
-    print('Applying Lemmatization..')
-    text = lemmatizer(text)
-
-    print('Most frequent tokens:')
-    text_bow = common_sentences(text)
+    print('Bag of Words:')
+    text_bow = create_bow(text)
 
     # output bow
     str = ' '.join(e[0] for e in text_bow)
@@ -296,7 +265,21 @@ def preProcess():
     print(bow)
     return bow
 
+def ProfilesBow():
+    users = ['PaulNicklen','KevinHart4real','ProfBrianCox','elonmusk',
+             'Snowden','jeffjarvis','iamjohnoliver','JimCameron','JeremyClarkson','JimWhite']    
+    tutto = pd.DataFrame(columns=['bow'])
+    for user in users:
+        print(user)
+        PATH = '../Profiles/'+user+'.csv'
+        df = pd.read_csv(PATH)
+        bow = preProcess(df)
+        df_new = pd.DataFrame(data=bow, columns=['bow'])
+        df_new['user'] = user
+        tutto = tutto.append(df_new)
+    tutto.to_csv(r'../Tweets-csv/BowTotali.csv', index=None, header=True)
 
+    
 def getUserBow(users_bow, u):
     return(users_bow[users_bow['user'] == u]['bow'].tolist())
 
