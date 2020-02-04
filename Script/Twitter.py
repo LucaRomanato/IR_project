@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import tweepy as tw
-from Script import userPreprocess as up
+import userPreprocess as up
 
 # Set twitter api kei and parameters
 def setAttr():
@@ -166,11 +166,28 @@ def twitter_scraper():
         print("Tweets have already been crawled")
 
     if not os.path.exists("../Tweets-csv/users-bows.csv"):
-        print("Collect user tweets start")
-        getProfiles()
-        print("Collect user tweets end")
+        print("Collect user's tweets start")
+        getProfiles(api)
+        print("Collect user's tweets end")
         print("Start bow creation")
         up.ProfilesBow()
         print("End bow creation")
     else:
         print("User's bows have already been created");
+
+def getTweetPrompt():
+    print("Set configuration parameters")
+    api, from_date, topic_channels = setAttr()
+    print("Collect tweets start")
+    collectTweets(api, from_date, topic_channels)
+    print("Collect tweets end")
+
+def getUserPrompt():
+    print("Set configuration parameters")
+    api, from_date, topic_channels = setAttr()
+    print("Collect user's tweets start")
+    getProfiles(api)
+    print("Collect user tweets end")
+    print("Start bow creation")
+    up.ProfilesBow()
+    print("End bow creation")

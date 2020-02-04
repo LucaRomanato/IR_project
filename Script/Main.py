@@ -7,10 +7,11 @@ from unsplash.auth import Auth
 import dateutil.parser
 from elasticsearch import Elasticsearch
 import subprocess
-from Script import userPreprocess as pp
-from Script import Index as id
-from Script import Twitter as tw
-from Script import Query as qu
+
+import userPreprocess as pp
+import Index as id
+import Twitter as tw
+import Query as qu
 
 
 client_id = "52d01f19c56e72284ecb5978e8730c065d6f4f35efee186b2f9af0723f88a880"
@@ -162,6 +163,7 @@ print("Index created successfully")
 print()
 
 print("Start GUI")
+
 if __name__ == "__main__":
     webbrowser.open('http://localhost:5000')
     app.run()
