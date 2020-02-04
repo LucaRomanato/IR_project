@@ -60,7 +60,7 @@
                     </form>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <div id="bows" class="bows-container d-flex mt-2 justify-content-center">
+                    <div id="bows" class="bows-container d-flex mt-2 justify-content-left">
                         {% for bow1 in bow %}
                         <div class='bow d-flex px-3 py-2 mr-2 mt-1'>{{bow1}}</div>
                         {% endfor %}
@@ -94,10 +94,11 @@
 <div class="container-fluid htlfndr-categories-portfolio">
     <h2 class="text-center mb-3" style="font-weight: bold;color: #515456;">Other users</h2>
     <div class="row m-0 justify-content-center" style="padding-left: 8%; padding-right: 8%">
-         {% for user1 in users %}
-            <div style="padding: 3%" class="col-4">
-            <div class="htlfndr-category-box" onclick="void(0)">
-                <img src="https://avatars.io/twitter/{{user1}}" style="width: 350px; height: 320px"/>
+        {% for user1 in users %}
+        <div style="padding: 3%" class="col-4">
+            <div class="htlfndr-category-box" href="#" onclick="changeUser('{{user1}}'); false">
+                <img src="https://avatars.io/twitter/{{user1}}"
+                     style="width: 350px; height: auto; min-height: 320px; max-height: 320px"/>
                 <div class="category-description">
                     <h2 class="subcategory-name">@{{user1}}</h2>
                 </div>
@@ -111,6 +112,7 @@
 
 
 {% block script %}
+
 
 <script src="{{ url_for('static', filename='js/choices.js') }}"></script>
 
@@ -136,7 +138,10 @@
         '                    <h5 class="visitor-user-name">##author##</h5>' +
         '                    <h6 class="visitor-user-firm">##topic##</h6>' +
         '                    <h6 class="visitor-user-firm">##data##</h6>' +
-        '                    <p class="visitor-user-text" data-toggle="tooltip" data-html="true" title="##tooltip##">##text##</p>' +
+        '                    <div class="con-tooltip top">'+
+        '                       <p class="visitor-user-text" >##text##</p>' +
+        '                       <div class="tooltip"><p class="m-0">##tooltip##</p></div>'+
+        '                    </div>'+
         '                </div>' +
         '            </div>' +
         '        </div>';
@@ -217,6 +222,16 @@
 
     }
 
+    function changeUser(user) {
+
+        $.get('/' + user + '/bow').then(function (data) {
+            console.log(data);
+            window.location = '/' + user;
+        });
+
+
+    }
+
     const choices = new Choices('[data-trigger]',
         {
             searchEnabled: false,
@@ -236,10 +251,7 @@
         },
         false,
     );
-
-
 </script>
-
 <script>
     $(function () {
         $(window).on("scroll", function () {

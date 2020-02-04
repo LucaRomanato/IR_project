@@ -1,6 +1,5 @@
 from elasticsearch import Elasticsearch
 import elasticsearch as es
-from Script.userPreprocess import preProcess
 import math
 
 def connectToELServer():
@@ -11,9 +10,8 @@ def connectToELServer():
 
 client, es = connectToELServer();
 
-# Il target è la pagina da cui ho preso il tweet
-def search(query, topic, target, tweet_date, page_number, page_size, bow, country='US'):
 
+def search(query, topic, target, tweet_date, tweet_date_end, page_number, page_size, bow, country='US'):
     start_from = (page_number * page_size) - page_size
 
     must = []
@@ -23,7 +21,7 @@ def search(query, topic, target, tweet_date, page_number, page_size, bow, countr
         should.append({"match": {"text": bow1}})
 
     if query.startswith('"') and query.endswith('"'):
-        query = query.replace('"','')
+        query = query.replace('"', '')
         query_body = {
             "size": page_size,
             "from": start_from,
@@ -45,10 +43,10 @@ def search(query, topic, target, tweet_date, page_number, page_size, bow, countr
             must.append({"term": {"topic": topic}})
 
         if target != "":
-            must.append({"term": {"target": target}})
+            must.append({"term": {"user": target}})
 
         if tweet_date != "":
-            must.append({"term": {"date": tweet_date}})
+            must.append({"range": {"date": {"gte": tweet_date, "lte": tweet_date_end}}})
 
         query_body = {
             "size": page_size,
@@ -60,17 +58,20 @@ def search(query, topic, target, tweet_date, page_number, page_size, bow, countr
                             "should": should,
                             "must": must,
                         }
+                    },
+                    "gauss": {
+                        "date": {
+                            "origin": "2020-01-01 00:00:00",
+                            "scale": "30d",
+                            "offset": "1d",
+                            "decay": 0.3
+                        }
                     }
                 }
             }
 
         }
-    print(query_body)
-    res = es.search(index='twitter6', body=query_body)
-    print(res)
-    total_page = math.ceil(res['hits']['total']['value']/page_size)
+    res = es.search(index='twitter', body=query_body)
+    total_page = math.ceil(res['hits']['total']['value'] / page_size)
 
     return total_page, page_number, res['hits']['hits']
-
-#nbow = preProcess()
-#print(search('"the Sun from"', "", "", "", 0, 10, nbow))

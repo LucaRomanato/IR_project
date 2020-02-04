@@ -7,15 +7,16 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import TweetTokenizer
 
-# nltk.download('wordnet')
-# nltk.download('punkt')
-# nltk.download('stopwords')
+import nltk
+nltk.download('wordnet')
+nltk.download('punkt')
+nltk.download('stopwords')
 
 def create_bow(text):
     sentences = (list(itertools.chain(text)))
     flat_list = [item for sublist in sentences for item in sublist]
-    print(Counter(flat_list).most_common(20))
-    text_bow = Counter(flat_list).most_common(20)
+    print(Counter(flat_list).most_common(15))
+    text_bow = Counter(flat_list).most_common(15)
     return text_bow
 
 def decontract(text):
@@ -346,9 +347,8 @@ def ProfilesBow():
         df_new = pd.DataFrame(data=bow, columns=['bow'])
         df_new['user'] = user
         tutto = tutto.append(df_new)
-    tutto.to_csv(r'../Tweets-csv/BowTotali.csv', index=None, header=True)
+    tutto.to_csv(r'../Tweets-csv/users-bows.csv', index=None, header=True)
 
-    
 def getUserBow(users_bow, u):
     return(users_bow[users_bow['user'] == u]['bow'].tolist())
 
@@ -359,5 +359,5 @@ def getUsers(users_bow):
     return(users_bow['user'].unique().tolist())
 
 def getUsersBows():
-    bow = pd.read_csv('../Tweets-csv/BowTotali.csv')
+    bow = pd.read_csv('../Tweets-csv/users-bows.csv')
     return(bow)

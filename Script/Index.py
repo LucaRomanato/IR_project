@@ -1,32 +1,46 @@
-import requests, os, csv
-from elasticsearch import Elasticsearch, helpers
-import subprocess
-import time
+import csv
+from elasticsearch import helpers
 
 
-# Start EL server
-def startELServer():
-    command = os.path.abspath('../elasticsearch/bin/elasticsearch')
-    popen = subprocess.Popen('cmd /c' + command)
-    popen.wait()
-
-
-# Connection to elasticsearch server and start client istance
-def connectToELServer():
-    res = requests.get('http://localhost:9200')
-    es = Elasticsearch([{'host': 'localhost', 'port': '9200'}])
-    client = Elasticsearch("localhost:9200")
-    # cancellare index
-    # es.indices.delete(index='index', ignore=[400, 404])
-    return client, es
-
-
-def indexing(client):
+def createIndexDocuments(client):
     body = {
         "settings": {
             "index": {"number_of_shards": 6,
                       "number_of_replicas": 1
-                      }
+                      },
+            "analysis": {
+                "filter": {
+                    "english_stop": {
+                        "type": "stop",
+                        "stopwords": "_english_"
+                    },
+                    "english_stemmer": {
+                        "type": "stemmer",
+                        "language": "english"
+                    },
+                    "english_possessive_stemmer": {
+                        "type": "stemmer",
+                        "language": "possessive_english"
+                    }
+                },
+                "analyzer": {
+                    "tweet_text_analyzer": {
+                        "tokenizer": "standard",
+                        "filter": [
+                            "english_possessive_stemmer",
+                            "lowercase",
+                            "english_stop",
+                            "english_stemmer"
+                        ]
+                    }
+                },
+                "normalizer": {
+                    "keyword_lowercase": {
+                        "type": "custom",
+                        "filter": ["lowercase"]
+                    }
+                }
+            }
         },
         "mappings": {
             "properties": {
@@ -34,38 +48,27 @@ def indexing(client):
                     "type": "date",
                     "format": "yyyy-MM-dd HH:mm:ss"
                 },
-                "location": {"type": "keyword"},
-                "text": {"type": "text"},
-                "topic": {"type": "keyword"},
-                "user": {"type": "keyword"}
+                "location": {"type": "keyword", "normalizer": "keyword_lowercase"},
+                "text": {
+                    "type": "text",
+                    "analyzer": "tweet_text_analyzer",
+                    "search_analyzer": "tweet_text_analyzer"
+                },
+                "topic": {"type": "keyword", "normalizer": "keyword_lowercase"},
+                "user": {"type": "keyword", "normalizer": "keyword_lowercase"}
             }
         }
     }
     client.indices.create(
-        index="twitter6", body=body
+        index="twitter", body=body
     )
 
-    with open("../Tweets-csv/tutto-csv.csv", "r", encoding="utf-8") as fileToLoad:
+    with open("../Tweets-csv/crawling-tweets.csv", "r", encoding="utf-8") as fileToLoad:
         reader = csv.DictReader(fileToLoad)
 
         resp = helpers.bulk(
             client,
             reader,
-            index="twitter6",
+            index="twitter",
             doc_type="_doc",
-
         )
-        print("Mappato")
-
-
-def createIndexDocuments():
-    try:
-        client, es = connectToELServer();
-    except Exception as err:
-        startELServer();
-        client, es = connectToELServer();
-
-    indexing(client)
-
-
-createIndexDocuments()

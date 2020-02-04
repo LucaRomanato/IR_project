@@ -1,9 +1,9 @@
 import os
 import pandas as pd
 import tweepy as tw
+from Script import userPreprocess as up
 
-
-# Set twitter api kei and parameter varius
+# Set twitter api kei and parameters
 def setAttr():
     consumer_key = '5p1yWHj3oaCqPbWqvQRZVMHl6'
     consumer_secret_key = 'KigvCscRtl24NhKnT61KVbTG7MbM7d7qGKVcNpgNKRaBzZJs5H'
@@ -135,29 +135,42 @@ def collectTweets(api, from_date, topic_channels):
         df = pd.DataFrame(data=attributes, columns=['user', 'text', 'location', 'date'])
         df['topic'] = topic_channel['topic']
         tutto = tutto.append(df)
-    tutto.to_csv(r'../Tweet-csv/tutto-csv.csv', index=None, header=True)
+    tutto.to_csv(r'../Tweet-csv/crawling-tweets.csv', index=None, header=True)
 
 
 # Get profile
 def getProfiles(api):
-    user = 'elonmusk'
-    tweets = tw.Cursor(api.user_timeline, screen_name=user, exclude_replies=True, tweet_mode="extended",
-                       count=10).items()
-    attributes = [[tweet.full_text] for tweet in tweets]
-    df = pd.DataFrame(data=attributes, columns=['text'])
-    if not os.path.exists("../Profiles/" + user):
-        os.makedirs("../Profiles/" + user)
-    path = "../Profiles/" + user + ".csv"
-    df.to_csv(path, index=None, header=True)
+    users = ['PaulNicklen', 'KevinHart4real', 'ProfBrianCox', 'elonmusk',
+             'Snowden', 'jeffjarvis', 'iamjohnoliver', 'JimCameron', 'JeremyClarkson', 'JimWhite']
+    for user in users:
+        tweets = tw.Cursor(api.user_timeline, screen_name=user, exclude_replies=True, tweet_mode="extended",
+                           count=10).items()
+        attributes = [[tweet.full_text] for tweet in tweets]
+        df = pd.DataFrame(data=attributes, columns=['text'])
+        if not os.path.exists("../Profiles/" + user):
+            os.makedirs("../Profiles/" + user)
+        path = "../Profiles/" + user + ".csv"
+        df.to_csv(path, index=None, header=True)
 
 
 # Main code
 def twitter_scraper():
+    print("Set configuration parameters")
     api, from_date, topic_channels = setAttr()
-    print("Set config end")
 
-    collectTweets(api, from_date, topic_channels)
-    print("Collect tweets end")
+    if not os.path.exists("../Tweets-csv/crawling-tweets.csv"):
+        print("Collect tweets start")
+        collectTweets(api, from_date, topic_channels)
+        print("Collect tweets end")
+    else:
+        print("Tweets have already been crawled")
 
-    getProfiles()
-    print("Collect profile tweet end")
+    if not os.path.exists("../Tweets-csv/users-bows.csv"):
+        print("Collect user tweets start")
+        getProfiles()
+        print("Collect user tweets end")
+        print("Start bow creation")
+        up.ProfilesBow()
+        print("End bow creation")
+    else:
+        print("User's bows have already been created");
