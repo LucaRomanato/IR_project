@@ -26,6 +26,7 @@ app = Flask(__name__, template_folder='../pages', static_folder='../pages/static
 bow = []
 user = []
 users_bow = []
+currentUser = None
 
 
 # Start EL server
@@ -97,6 +98,8 @@ def bow(user):
     global bow
     global users
     global users_bow
+    global currentUser
+    currentUser = user
     users = pp.getUsersNotCurrent(users_bow, user)
     bow = pp.getUserBow(users_bow, user)
 
@@ -106,6 +109,8 @@ def bow(user):
 @app.route("/search", methods=['POST'])
 def search():
     global bow
+    global currentUser
+
     data = request.get_json(force=True)
     query = data['q']
     topic = data['t']
@@ -131,7 +136,7 @@ def search():
         date = ""
         date_end = ""
 
-    res = qu.search(query, topic, target, date, date_end, page_number, 10, bow, "")
+    res = qu.search(currentUser, query, topic, target, date, date_end, page_number, 10, bow, "")
     return jsonify(res)
 
 

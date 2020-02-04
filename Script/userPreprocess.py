@@ -361,3 +361,4 @@ def getUsers(users_bow):
 def getUsersBows():
     bow = pd.read_csv('../Tweets-csv/users-bows.csv')
     return(bow)
+

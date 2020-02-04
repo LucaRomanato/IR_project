@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import tweepy as tw
 import userPreprocess as up
+import numpy as np
 
 # Set twitter api kei and parameters
 def setAttr():
@@ -135,6 +136,7 @@ def collectTweets(api, from_date, topic_channels):
         df = pd.DataFrame(data=attributes, columns=['user', 'text', 'location', 'date'])
         df['topic'] = topic_channel['topic']
         tutto = tutto.append(df)
+    updateLocation(tutto)
     tutto.to_csv(r'../Tweet-csv/crawling-tweets.csv', index=None, header=True)
 
 
@@ -152,6 +154,21 @@ def getProfiles(api):
         path = "../Profiles/" + user + ".csv"
         df.to_csv(path, index=None, header=True)
 
+
+def updateLocation(df):
+    df['location'].fillna('nan', inplace=True)
+    df['location'] = df['location'].map(
+        {'Washington, DC & Cambridge, UK': 'American', 'New York, New York': 'American', 'New York City': 'American',
+         'MediaCityUK, Salford': 'American',
+         'Washington Bureau': 'American', 'Washington, D.C.': 'American', 'San Francisco, CA': 'American',
+         'California, USA': 'American', 'Hollywood, CA': 'American',
+         'New York and the World': 'American', 'Seattle': 'American', 'Global': 'Global', 'nan': 'Global',
+         'Between gluons and galaxies': 'Global',
+         'Goddard Space Flight Center': 'English', 'London': 'English', 'English': 'English',
+         'Amsterdam, The Netherlands': 'Dutch', 'Record Label, The Netherlands': 'Dutch'
+         }
+    )
+    df.to_csv("crawling-tweets.csv", index=None, header=True)
 
 # Main code
 def twitter_scraper():

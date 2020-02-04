@@ -11,11 +11,20 @@ def connectToELServer():
 client, es = connectToELServer();
 
 
-def search(query, topic, target, tweet_date, tweet_date_end, page_number, page_size, bow, country='US'):
+def search(user, query, topic, target, tweet_date, tweet_date_end, page_number, page_size, bow, country='US'):
     start_from = (page_number * page_size) - page_size
+
+    american = ['PaulNicklen', 'KevinHart4real', 'ProfBrianCox', 'elonmusk',
+                'Snowden', 'jeffjarvis', 'JimCameron']
+    english = ['iamjohnoliver', 'JeremyClarkson', 'JimWhite']
 
     must = []
     should = []
+
+    if user in american:
+        should.append({"term": {"location": 'American'}})
+    if user in english:
+        should.append({"term": {"location": 'English'}})
 
     for bow1 in bow:
         should.append({"match": {"text": bow1}})
