@@ -6,7 +6,7 @@
 
 ###About
 The following project implemented a custom search engine for tweets based
-on user preferences.
+on user's preferences.
 
 ###Requirements
 ElasticSearch
