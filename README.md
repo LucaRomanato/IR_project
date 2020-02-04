@@ -41,7 +41,7 @@ C:.
 ```
 Run ElasticSearch, you can use this command if the previous suggested commands have been executed:
 ```
-./elasticsearch/bin/elasticsearch
+./elasticsearch/bin/elasticsearch.bat
 
 Alternatively, just start the elasticsearch.bat file in the bin folder
 ```
