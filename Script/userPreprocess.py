@@ -14,8 +14,8 @@ from nltk.tokenize import TweetTokenizer
 def create_bow(text):
     sentences = (list(itertools.chain(text)))
     flat_list = [item for sublist in sentences for item in sublist]
-    print(Counter(flat_list).most_common(20))
-    text_bow = Counter(flat_list).most_common(20)
+    print(Counter(flat_list).most_common(15))
+    text_bow = Counter(flat_list).most_common(15)
     return text_bow
 
 def decontract(text):
