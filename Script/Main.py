@@ -136,6 +136,9 @@ def search():
         date = ""
         date_end = ""
 
+    print(date)
+    print(date_end)
+    print(query)
     res = qu.search(currentUser, query, topic, target, date, date_end, page_number, 10, bow, "")
     return jsonify(res)
 

@@ -18,13 +18,13 @@ free download at the following link: https://www.elastic.co/downloads/elasticsea
 Clone repository:
 ```
 git clone https://github.com/LucaRomanato/IR_project.git
-cd IR_project/Script
+cd IR_project
 ```
 Install dependency:
 ```
 pip install -r requirements.txt
 ```
-**Now, it is necessary to put ElastiSearch folder in the root of the project and rename ElasticSearch folder in "elasticsearch" (without quotes)**
+Now, it is usefull to put ElastiSearch folder in the root of the project and rename ElasticSearch folder in "elasticsearch" (without quotes)
 
 The root folder must be as follow:
 
@@ -39,8 +39,16 @@ C:.
 ├───Script
 └───Tweets-csv
 ```
+Run ElasticSearch, you can use this command if the previous suggested commands have been executed:
+```
+./elasticsearch/bin/elasticsearch
+
+Alternatively, just start the elasticsearch.bat file in the bin folder
+```
+
 Now the environment is ready, run the program with this command:
 ```
+cd IR_project/Script
 python main.py
 ```
 ### Notes
