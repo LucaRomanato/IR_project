@@ -48,7 +48,7 @@ Alternatively, just start the elasticsearch file in the bin folder
 
 Now the environment is ready, run the program with this command:
 ```
-cd IR_project/Script
+cd Script
 python main.py
 ```
 ### Notes
